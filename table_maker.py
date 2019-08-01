@@ -6,19 +6,19 @@ def table_maker(my_lists=[['John Smith','356 Grove Rd','123-4567'],\
                 headers=['Name','Address','Phone Number']):
     """
     Takes a list of lists, my_lists, and a list, headers, and prints an
-    aligned table with columns labeled by items in headers and with each row as a
-    sublist of my_lists.
+    aligned table with columns labeled by items in headers and with each row as
+    a sublist of my_lists.
 
     Each sublist of my_lists should have the same length as headers.
 
     Default output looks like:
-    ┌────────────┬────────────────┬──────────────┐
-    │ Name       │ Address        │ Phone Number │
-    ├────────────┼────────────────┼──────────────┤
-    │ John Smith │ 356 Grove Rd   │ 123-4567     │
-    │ Mary Sue   │ 311 Penny Lane │ 555-2451     │
-    │ Hobo       │ N/A            │ N/A          │
-    └────────────┴────────────────┴──────────────┘
+    ┌─────────────────┬────────────────┬──────────────┐
+    │ Name            │ Address        │ Phone Number │
+    ├─────────────────┼────────────────┼──────────────┤
+    │ John Smith      │ 356 Grove Rd   │ 123-4567     │
+    │ Mary Sue        │ 311 Penny Lane │ 555-2451     │
+    │ A Rolling Stone │ N/A            │ N/A          │
+    └─────────────────┴────────────────┴──────────────┘
     """
 
     number_of_items = len(headers)
