@@ -17,7 +17,6 @@ def table_maker(my_lists=[['John Smith','356 Grove Rd','123-4567'],\
     │ Mary Sue   │ 311 Penny Lane │ 555-2451     │
     │ Hobo       │ N/A            │ N/A          │
     └────────────┴────────────────┴──────────────┘
-    
     """
 
     number_of_items = len(headers)
