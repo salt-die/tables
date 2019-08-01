@@ -20,7 +20,8 @@ Default output looks like:
 Calling table_maker with a list of lists:
 
 ```
->>> table_maker([['spotted','dog','pants','heavily'],['black','cat','meows','loudly'],['tall','man','runs','quickly']],['adjective','noun','verb','adverb'])
+>>> table_maker([['spotted','dog','pants','heavily'],['black','cat','meows','loudly'],\
+['tall','man','runs','quickly']],['adjective','noun','verb','adverb'])
 ┌───────────┬──────┬───────┬─────────┐
 │ adjective │ noun │ verb  │ adverb  │
 ├───────────┼──────┼───────┼─────────┤
