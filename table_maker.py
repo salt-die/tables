@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-def table_maker(my_lists=[['John Smith','356 Grove Rd','123-4567'],\
+def table_maker(my_lists=[['John Smith', '356 Grove Rd', '123-4567'],\
                           ['Mary Sue', '311 Penny Lane', '555-2451'],\
                           ['A Rolling Stone', 'N/A', 'N/A']],\
-                headers=['Name','Address','Phone Number']):
+                headers=['Name', 'Address', 'Phone Number']):
     """
     Takes a list of lists, my_lists, and a list, headers, and prints an
     aligned table with columns labeled by items in headers and with each row as
@@ -45,7 +45,7 @@ def table_maker(my_lists=[['John Smith','356 Grove Rd','123-4567'],\
         """
         Returns the box-line seperators.
         """
-        a, b, c = [("┌","┬","┐"),("├","┼","┤"),("└","┴","┘")][i]
+        a, b, c = [("┌", "┬", "┐"), ("├", "┼", "┤"), ("└", "┴", "┘")][i]
         return a + b.join("─" * (length + 2) for length in lengths) + c
 
     row_length = sum(lengths) + number_of_items * 3 + 2
