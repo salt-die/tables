@@ -43,7 +43,7 @@ def table_maker(my_lists=[['John Smith','356 Grove Rd','123-4567'],\
             my_lists[j][i] += " " * (max_length - len(item))
 
     #Construct table
-    table = "\n".join("│ " + " │ ".join(line) + " │" for line in my_lists) + "\n"
+    table = "\n".join("│ " + " │ ".join(row) + " │" for row in my_lists) + "\n"
     def box_drawing(i):
         a, b, c = [("┌","┬","┐"),("├","┼","┤"),("└","┴","┘")][i]
         return a + b.join("─" * (length + 2) for length in lengths) + c
