@@ -20,11 +20,11 @@ def table_maker(my_lists=[['John Smith', '356 Grove Rd', '123-4567'],\
     │ A Rolling Stone │ N/A            │ N/A          │
     └─────────────────┴────────────────┴──────────────┘
     """
-    number_of_items = len(headers)
+    number_of_columns = len(headers)
 
     #Check that sizes match up
     for my_list in my_lists:
-        if len(my_list) != number_of_items:
+        if len(my_list) != number_of_columns:
             return "Number of items in rows don't match number of headers."
 
     my_lists.insert(0, headers) #Combine headers and my_lists
@@ -47,7 +47,7 @@ def table_maker(my_lists=[['John Smith', '356 Grove Rd', '123-4567'],\
         a, b, c = [("┌", "┬", "┐"), ("├", "┼", "┤"), ("└", "┴", "┘")][i]
         return a + b.join("─" * (length + 2) for length in lengths) + c
 
-    row_length = sum(lengths) + number_of_items * 3 + 2
+    row_length = sum(lengths) + number_of_columns * 3 + 2
     table = box_drawing(0) + "\n" +\
             table[:row_length] +\
             box_drawing(1) + "\n" +\
