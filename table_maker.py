@@ -4,7 +4,7 @@ def table_maker(my_lists=[['John Smith','356 Grove Rd','123-4567'],\
                 headers=['Name','Address','Phone Number']):
     """
     Takes a list of lists, my_lists, and a list, headers, and prints an
-    aligned table with columns labeled by items in headers and each row as a
+    aligned table with columns labeled by items in headers and with each row as a
     sublist of my_lists.
 
     Each sublist of my_lists should have the same length as headers.
