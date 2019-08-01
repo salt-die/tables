@@ -20,7 +20,6 @@ def table_maker(my_lists=[['John Smith', '356 Grove Rd', '123-4567'],\
     │ A Rolling Stone │ N/A            │ N/A          │
     └─────────────────┴────────────────┴──────────────┘
     """
-
     number_of_items = len(headers)
 
     #Check that sizes match up
