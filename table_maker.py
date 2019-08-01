@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 def table_maker(my_lists=[['John Smith','356 Grove Rd','123-4567'],\
                           ['Mary Sue', '311 Penny Lane', '555-2451'],\
-                          ['Hobo', 'N/A', 'N/A']],\
+                          ['A Rolling Stone', 'N/A', 'N/A']],\
                 headers=['Name','Address','Phone Number']):
     """
     Takes a list of lists, my_lists, and a list, headers, and prints an
@@ -10,7 +10,7 @@ def table_maker(my_lists=[['John Smith','356 Grove Rd','123-4567'],\
     sublist of my_lists.
 
     Each sublist of my_lists should have the same length as headers.
-    
+
     Default output looks like:
     ┌────────────┬────────────────┬──────────────┐
     │ Name       │ Address        │ Phone Number │
@@ -30,24 +30,25 @@ def table_maker(my_lists=[['John Smith','356 Grove Rd','123-4567'],\
 
     my_lists.insert(0, headers) #Combine headers and my_lists
     table = zip(*my_lists) #Transpose my_lists to iterate over columns
-
     lengths = []
-    row_length = 0
     for i, column in enumerate(table):
         max_length = max([len(item) for item in column])
-        row_length += max_length
         lengths.append(max_length)
-
         #Pad the length of items in each column
         for j, item in enumerate(column):
             my_lists[j][i] += " " * (max_length - len(item))
 
     #Construct table
     table = "\n".join("│ " + " │ ".join(row) + " │" for row in my_lists) + "\n"
+
     def box_drawing(i):
+        """
+        Returns the box-line seperators.
+        """
         a, b, c = [("┌","┬","┐"),("├","┼","┤"),("└","┴","┘")][i]
         return a + b.join("─" * (length + 2) for length in lengths) + c
-    row_length += number_of_items * 3 + 2
+
+    row_length = sum(lengths) + number_of_items * 3 + 2
     table = box_drawing(0) + "\n" +\
             table[:row_length] +\
             box_drawing(1) + "\n" +\
