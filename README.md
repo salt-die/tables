@@ -2,7 +2,7 @@
 Prints list of lists as a pretty table.
 
 
-table_maker(my_lists, headers) takes a list of lists, my_lists, and a list, headers, and prints an aligned table with columns labeled by items in headers and each row as a sublist of my_lists. Each sublist of my_lists should have the same length as headers.
+table_maker(my_lists, headers) takes a list of lists, my_lists, and a list, headers, and prints an aligned table with columns labeled by items in headers and with each row as a sublist of my_lists. Each sublist of my_lists should have the same length as headers.
 
 Default output looks like:
 
