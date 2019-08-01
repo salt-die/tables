@@ -1,23 +1,27 @@
 # Table-Maker
-Prints list of lists as a pretty table.
+Prints a list of lists as a pretty table.
 
 
-table_maker(my_lists, headers) takes a list of lists, my_lists, and a list, headers, and prints an aligned table with columns labeled by items in headers and with each row as a sublist of my_lists. Each sublist of my_lists should have the same length as headers.
+`table_maker(my_lists, headers)` takes a list of lists, my_lists, and a list, 
+headers, and prints an aligned table with columns labeled by items in headers 
+and with each row a sublist of my_lists. Each sublist of my_lists should 
+have the same length as headers.
 
-Default output looks like:
+
+Calling table_maker with no parameters:
 
 ```
 >>>table_maker()
-┌────────────┬────────────────┬──────────────┐
-│ Name       │ Address        │ Phone Number │
-├────────────┼────────────────┼──────────────┤
-│ John Smith │ 356 Grove Rd   │ 123-4567     │
-│ Mary Sue   │ 311 Penny Lane │ 555-2451     │
-│ Hobo       │ N/A            │ N/A          │
-└────────────┴────────────────┴──────────────┘
+┌─────────────────┬────────────────┬──────────────┐
+│ Name            │ Address        │ Phone Number │
+├─────────────────┼────────────────┼──────────────┤
+│ John Smith      │ 356 Grove Rd   │ 123-4567     │
+│ Mary Sue        │ 311 Penny Lane │ 555-2451     │
+│ A Rolling Stone │ N/A            │ N/A          │
+└─────────────────┴────────────────┴──────────────┘
 ```
 
-Calling table_maker with a list of lists:
+Calling table_maker with suitable parameters:
 
 ```
 >>> table_maker([['spotted','dog','pants','heavily'],['black','cat','meows','loudly'],\
