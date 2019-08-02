@@ -30,34 +30,26 @@ def table_maker(my_lists=[['John Smith', '356 Grove Rd', '123-4567'],\
 
     my_lists.insert(0, headers) #Combine headers and my_lists
     table = zip(*my_lists) #Transpose my_lists to iterate over columns
-    lengths = [] #Used later in box_drawing() to find correct number of '─''s
     for i, column in enumerate(table):
         max_length = max([len(item) for item in column])
-        lengths.append(max_length)
         #Pad the length of items in each column
         for j, item in enumerate(column):
             my_lists[j][i] += " " * (max_length - len(item))
 
     #Construct table
-    table = "\n".join("│ " + " │ ".join(row) + " │" for row in my_lists) + "\n"
+    table = ["│ " + " │ ".join(row) + " │" for row in my_lists]
 
-    def box_drawing(i):
-        """
-        Returns the box-line seperators.
-        """
-        left, mid, right = [("┌", "┬", "┐"),\
-                            ("├", "┼", "┤"),\
-                            ("└", "┴", "┘")][i]
-        return left + mid.join("─" * (length + 2)\
-                               for length in lengths) + right
+    box_drawing = [left +\
+                   mid.join("─" * (len(item) + 2) for item in my_lists[0]) + \
+                   right
+                   for left, mid, right in [("┌", "┬", "┐"),\
+                                            ("├", "┼", "┤"),\
+                                            ("└", "┴", "┘")]]
 
-    #Use row_length to insert the second box_drawing line in the correct place
-    row_length = sum(lengths) + number_of_columns * 3 + 2
-    table = box_drawing(0) + "\n" +\
-            table[:row_length] +\
-            box_drawing(1) + "\n" +\
-            table[row_length:] +\
-            box_drawing(2)
+    table.insert(0, box_drawing[0]) #Top of box
+    table.insert(2, box_drawing[1]) #Horizontal Line after Headers
+    table.append(box_drawing[2])    #Bottom of box
+    table = "\n".join(table)
 
     print(table)
     #return table #Alternatively use this line to save the table as a string
