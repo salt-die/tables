@@ -40,7 +40,7 @@ def table_maker(my_lists=[['John Smith', '356 Grove Rd', '123-4567'],\
     table = ["│ " + " │ ".join(row) + " │" for row in my_lists]
 
     box_drawing = [left +\
-                   mid.join("─" * (len(item) + 2) for item in my_lists[0]) + \
+                   mid.join("─" * (len(item) + 2) for item in my_lists[0]) +\
                    right
                    for left, mid, right in [("┌", "┬", "┐"),\
                                             ("├", "┼", "┤"),\
@@ -49,7 +49,7 @@ def table_maker(my_lists=[['John Smith', '356 Grove Rd', '123-4567'],\
     table.insert(0, box_drawing[0]) #Top of box
     table.insert(2, box_drawing[1]) #Horizontal Line after Headers
     table.append(box_drawing[2])    #Bottom of box
-    table = "\n".join(table)
+    table = "\n".join(table)        #Convert table as list to string
 
     print(table)
     #return table #Alternatively use this line to save the table as a string
