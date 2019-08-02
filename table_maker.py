@@ -25,7 +25,8 @@ def table_maker(my_lists=[['John Smith', '356 Grove Rd', '123-4567'],\
     #Check that sizes match up
     for my_list in my_lists:
         if len(my_list) != number_of_columns:
-            return "Number of items in rows don't match number of headers."
+            print("Number of items in rows don't match number of headers.")
+            return
 
     my_lists.insert(0, headers) #Combine headers and my_lists
     table = zip(*my_lists) #Transpose my_lists to iterate over columns
