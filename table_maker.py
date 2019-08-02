@@ -40,8 +40,6 @@ def table_maker(my_lists=[['John Smith', '356 Grove Rd', '123-4567'],\
 
     #Construct table
     table = "\n".join("│ " + " │ ".join(row) + " │" for row in my_lists) + "\n"
-    #Use row_length to insert the second box_drawing line in the correct place
-    row_length = sum(lengths) + number_of_columns * 3 + 2
 
     def box_drawing(i):
         """
@@ -53,6 +51,8 @@ def table_maker(my_lists=[['John Smith', '356 Grove Rd', '123-4567'],\
         return left + mid.join("─" * (length + 2)\
                                for length in lengths) + right
 
+    #Use row_length to insert the second box_drawing line in the correct place
+    row_length = sum(lengths) + number_of_columns * 3 + 2
     table = box_drawing(0) + "\n" +\
             table[:row_length] +\
             box_drawing(1) + "\n" +\
