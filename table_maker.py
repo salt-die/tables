@@ -27,13 +27,12 @@ def table_maker(*my_lists, headers=None):
     #Check that sizes match up
     for my_list in my_lists[1:]:
         if len(my_list) != number_of_columns:
-            print("Number of items in rows inconsistent")
+            print("Number of items in rows inconsistent.")
             return
 
-    if headers != None:
-        if len(headers) != number_of_columns:
-            print("Number of items in rows don't match number of headers.")
-            return
+    if headers != None and len(headers) != number_of_columns:
+        print("Number of items in rows don't match number of headers.")
+        return
 
     my_lists = list(my_lists)
     if headers != None:
@@ -42,7 +41,7 @@ def table_maker(*my_lists, headers=None):
     #Stringify
     for my_list in my_lists:
         for i, item in enumerate(my_list):
-            my_list[i]=str(item)
+            my_list[i] = str(item)
 
     table = zip(*my_lists) #Transpose my_lists to iterate over columns
     for i, column in enumerate(table):
