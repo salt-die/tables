@@ -2,17 +2,17 @@
 # -*- coding: utf-8 -*-
 def table_maker(*my_lists, headers=None):
     """
-    Takes a list of lists, my_lists, and a list, headers, and prints an
+    Takes a list of lists, my_lists, and a list, headers, and returns an
     aligned table with columns labeled by items in headers and with each row as
     a sublist of my_lists.
 
     Each sublist of my_lists should have the same length as headers.
 
     Output looks like:
-    >>> table_maker(['John Smith', '356 Grove Rd', '123-4567'],\
-                    ['Mary Sue', '311 Penny Lane', '555-2451'],\
-                    ['A Rolling Stone', 'N/A', 'N/A'],\
-                    headers=['Name', 'Address', 'Phone Number'])
+    >>> print(table_maker(['John Smith', '356 Grove Rd', '123-4567'],\
+                          ['Mary Sue', '311 Penny Lane', '555-2451'],\
+                          ['A Rolling Stone', 'N/A', 'N/A'],\
+                          headers=['Name', 'Address', 'Phone Number']))
 
     ┌─────────────────┬────────────────┬──────────────┐
     │ Name            │ Address        │ Phone Number │
@@ -27,15 +27,13 @@ def table_maker(*my_lists, headers=None):
     #Check that sizes match up
     for my_list in my_lists[1:]:
         if len(my_list) != number_of_columns:
-            print("Number of items in rows inconsistent.")
-            return
+            raise ValueError("Length of rows inconsistent.")
 
-    if headers != None and len(headers) != number_of_columns:
-        print("Number of items in rows don't match number of headers.")
-        return
+    if headers and len(headers) != number_of_columns:
+        raise ValueError("Length of headers inconsistent with length of rows.")
 
     my_lists = list(my_lists)
-    if headers != None:
+    if headers:
         my_lists.insert(0, headers) #Combine headers and my_lists
 
     #Stringify
@@ -61,10 +59,9 @@ def table_maker(*my_lists, headers=None):
                                             ("└", "┴", "┘")]]
 
     table.insert(0, box_drawing[0]) #Top of box
-    if headers != None:
+    if headers:
         table.insert(2, box_drawing[1]) #Horizontal Line after Headers
     table.append(box_drawing[2])    #Bottom of box
     table = "\n".join(table)        #Convert table as list to string
 
-    print(table)
-    #return table
+    return table
