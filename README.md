@@ -11,9 +11,9 @@ have the same length. headers is optional, but looks nice.
 Example Outputs:
 
 ```
->>> print(table_maker(['John Smith', '356 Grove Rd', '123-4567'],\
-                      ['Mary Sue', '311 Penny Lane', '555-2451'],\
-                      ['A Rolling Stone', 'N/A', 'N/A'],\
+>>> print(table_maker(['John Smith', '356 Grove Rd', '123-4567'],
+                      ['Mary Sue', '311 Penny Lane', '555-2451'],
+                      ['A Rolling Stone', 'N/A', 'N/A'],
                       headers=['Name', 'Address', 'Phone Number']))
 ┌─────────────────┬────────────────┬──────────────┐
 │ Name            │ Address        │ Phone Number │
@@ -26,9 +26,9 @@ Example Outputs:
 
 
 ```
->>> print(table_maker(['spotted','dog','pants','heavily'],\
-                      ['black','cat','meows','loudly'],\
-                      ['tall','man','runs','quickly'],\
+>>> print(table_maker(['spotted','dog','pants','heavily'],
+                      ['black','cat','meows','loudly'],
+                      ['tall','man','runs','quickly'],
                       headers=['adjective','noun','verb','adverb']))
 ┌───────────┬──────┬───────┬─────────┐
 │ adjective │ noun │ verb  │ adverb  │
@@ -42,9 +42,9 @@ Example Outputs:
 Or without headers:
 
 ```
->>> print(table_maker(["x-coordinate", 234.64, "y-coordinate", -123.54],\
-                      ["x-coordinate", 1211.00, "y-coordinate", 10.03],\
-                      ["x-coordinate", -176.50, "y-coordinate", -54.00],\
+>>> print(table_maker(["x-coordinate", 234.64, "y-coordinate", -123.54],
+                      ["x-coordinate", 1211.00, "y-coordinate", 10.03],
+                      ["x-coordinate", -176.50, "y-coordinate", -54.00],
                       ["x-coordinate", 534.35, "y-coordinate", 566.24]))
 ┌──────────────┬────────┬──────────────┬─────────┐
 │ x-coordinate │ 234.64 │ y-coordinate │ -123.54 │

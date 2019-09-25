@@ -9,9 +9,9 @@ def table_maker(*my_lists, headers=None):
     Each sublist of my_lists should have the same length as headers.
 
     Output looks like:
-    >>> print(table_maker(['John Smith', '356 Grove Rd', '123-4567'],\
-                          ['Mary Sue', '311 Penny Lane', '555-2451'],\
-                          ['A Rolling Stone', 'N/A', 'N/A'],\
+    >>> print(table_maker(['John Smith', '356 Grove Rd', '123-4567'],
+                          ['Mary Sue', '311 Penny Lane', '555-2451'],
+                          ['A Rolling Stone', 'N/A', 'N/A'],
                           headers=['Name', 'Address', 'Phone Number']))
 
     ┌─────────────────┬────────────────┬──────────────┐
@@ -43,7 +43,7 @@ def table_maker(*my_lists, headers=None):
 
     table = zip(*my_lists) #Transpose my_lists to iterate over columns
     for i, column in enumerate(table):
-        max_length = max([len(item) for item in column])
+        max_length = len(max(column, key=len))
         #Pad the length of items in each column
         for j, item in enumerate(column):
             my_lists[j][i] += " " * (max_length - len(item))
