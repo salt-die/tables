@@ -50,13 +50,13 @@ def table_maker(*my_lists, headers=None):
 
     #Construct table
     table = [f'│ {" │ ".join(row)} │' for row in my_lists]
-    box_drawing = [f'{left}{mid.join("─" * (len(item) + 2) for item in my_lists[0])}{right}'
-                   for left, mid, right in ['┌┬┐','├┼┤','└┴┘']]
+    top, title, bottom = (f'{left}{mid.join("─" * (len(item) + 2) for item in my_lists[0])}{right}'
+                          for left, mid, right in ('┌┬┐','├┼┤','└┴┘'))
 
-    table.insert(0, box_drawing[0])
+    table.insert(0, top)
     if headers:
-        table.insert(2, box_drawing[1])
-    table.append(box_drawing[2])
+        table.insert(2, title)
+    table.append(bottom)
     table = "\n".join(table)
 
     return table
