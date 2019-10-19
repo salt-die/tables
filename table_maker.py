@@ -27,41 +27,36 @@ def table_maker(*my_lists, headers=None):
     #Check that sizes match up
     for my_list in my_lists[1:]:
         if len(my_list) != number_of_columns:
-            raise ValueError("Length of rows inconsistent.")
+            raise ValueError('Length of rows inconsistent.')
 
     if headers and len(headers) != number_of_columns:
-        raise ValueError("Length of headers inconsistent with length of rows.")
+        raise ValueError('Length of headers inconsistent with length of rows.')
 
     my_lists = list(my_lists)
     if headers:
-        my_lists.insert(0, headers) #Combine headers and my_lists
+        my_lists.insert(0, headers)
 
     #Stringify
     for my_list in my_lists:
         for i, item in enumerate(my_list):
             my_list[i] = str(item)
 
-    table = zip(*my_lists) #Transpose my_lists to iterate over columns
+    #Pad the length of items in each column
+    table = zip(*my_lists)
     for i, column in enumerate(table):
         max_length = len(max(column, key=len))
-        #Pad the length of items in each column
         for j, item in enumerate(column):
-            my_lists[j][i] += " " * (max_length - len(item))
+            my_lists[j][i] += ' ' * (max_length - len(item))
 
     #Construct table
-    table = ["│ " + " │ ".join(row) + " │" for row in my_lists]
+    table = [f'│ {" │ ".join(row)} │' for row in my_lists]
+    box_drawing = [f'{left}{mid.join("─" * (len(item) + 2) for item in my_lists[0])}{right}'
+                   for left, mid, right in ['┌┬┐','├┼┤','└┴┘']]
 
-    box_drawing = [left +\
-                   mid.join("─" * (len(item) + 2) for item in my_lists[0]) +\
-                   right
-                   for left, mid, right in [("┌", "┬", "┐"),\
-                                            ("├", "┼", "┤"),\
-                                            ("└", "┴", "┘")]]
-
-    table.insert(0, box_drawing[0]) #Top of box
+    table.insert(0, box_drawing[0])
     if headers:
-        table.insert(2, box_drawing[1]) #Horizontal Line after Headers
-    table.append(box_drawing[2])    #Bottom of box
-    table = "\n".join(table)        #Convert table as list to string
+        table.insert(2, box_drawing[1])
+    table.append(box_drawing[2])
+    table = "\n".join(table)
 
     return table
