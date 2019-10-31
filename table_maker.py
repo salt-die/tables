@@ -44,7 +44,7 @@ def table_maker(*my_lists, headers=None, centered=False):
     #Pad the length of items in each column
     table = zip(*my_lists)
     for i, column in enumerate(table):
-        max_length = max(map(len,column))
+        max_length = max(map(len, column))
         for j, item in enumerate(column):
             my_lists[j][i] = f'{item:^{max_length}}' if centered else f'{item:<{max_length}}'
 
