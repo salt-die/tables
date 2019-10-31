@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 def table_maker(*my_lists, headers=None, centered=False):
     """
     Takes a list of lists, my_lists, and a list, headers, and returns an
