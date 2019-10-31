@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-def table_maker(*my_lists, headers=None):
+def table_maker(*my_lists, headers=None, centered=False):
     """
     Takes a list of lists, my_lists, and a list, headers, and returns an
     aligned table with columns labeled by items in headers and with each row as
@@ -46,7 +46,10 @@ def table_maker(*my_lists, headers=None):
     for i, column in enumerate(table):
         max_length = len(max(column, key=len))
         for j, item in enumerate(column):
-            my_lists[j][i] += ' ' * (max_length - len(item))
+            if centered:
+                my_lists[j][i] = f'{item:^{max_length}}'
+            else:
+                my_lists[j][i] += ' ' * (max_length - len(item))
 
     #Construct table
     table = [f'│ {" │ ".join(row)} │' for row in my_lists]
