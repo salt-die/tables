@@ -39,17 +39,14 @@ def table_maker(*my_lists, headers=None, centered=False):
     #Stringify
     for my_list in my_lists:
         for i, item in enumerate(my_list):
-            my_list[i] = str(item)
+            my_list[i] = str(item) #f-strings
 
     #Pad the length of items in each column
     table = zip(*my_lists)
     for i, column in enumerate(table):
-        max_length = len(max(column, key=len))
+        max_length = max(map(len,column))
         for j, item in enumerate(column):
-            if centered:
-                my_lists[j][i] = f'{item:^{max_length}}'
-            else:
-                my_lists[j][i] += ' ' * (max_length - len(item))
+            my_lists[j][i] = f'{item:^{max_length}}' if centered else f'{item:<{max_length}}'
 
     #Construct table
     table = [f'│ {" │ ".join(row)} │' for row in my_lists]
