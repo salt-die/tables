@@ -37,7 +37,7 @@ def table_maker(*my_lists, headers=None, centered=False):
     #Stringify
     for my_list in my_lists:
         for i, item in enumerate(my_list):
-            my_list[i] = str(item) #f-strings
+            my_list[i] = str(item)
 
     #Pad the length of items in each column
     table = zip(*my_lists)
