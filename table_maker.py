@@ -1,4 +1,4 @@
-def table_maker(*my_lists, headers=None, centered=False, v_sep=False):
+def table_maker(*my_lists, headers=None, centered=False, h_sep=False):
     """
     Takes a list of lists, my_lists, and a list, headers, and returns an
     aligned table with columns labeled by items in headers and with each row as
@@ -51,7 +51,7 @@ def table_maker(*my_lists, headers=None, centered=False, v_sep=False):
     top, title, bottom = (f'{left}{mid.join("─" * (len(item) + 2) for item in my_lists[0])}{right}'
                           for left, mid, right in ('┌┬┐','├┼┤','└┴┘'))
 
-    if v_sep:
+    if h_sep:
        table = [line for i, row in enumerate(table)
                      for line in ((title, row) if i > 0 else (row,))]
     elif headers:
