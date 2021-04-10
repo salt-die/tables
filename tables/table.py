@@ -158,6 +158,12 @@ class Table:
     def remove_row(self, index):
         raise NotImplementedError
 
+    def copy(self):
+        table = type(self)()
+        for attr in ('columns', 'labels', 'centered', 'padding', 'style'):
+            setattr(table, attr, getattr(self, attr))
+        return table
+
     def __setattr__(self, attr, value):
         if attr != '_needs_rebuild':  # Indicate that table needs to be rebuilt
             self._needs_rebuild = attr != '_as_string'
@@ -167,7 +173,44 @@ class Table:
         raise NotImplementedError
 
     def __getitem__(self, key):
-        raise NotImplementedError
+        if isinstance(key, list):
+            if isinstance(key[0], int):
+                key = key, ...
+            elif isinstance(key[0], str):
+                key = ..., [self.labels.index(label) for label in key]
+
+        elif isinstance(key, str):
+            key = ..., self.labels.index(key)
+
+        elif isinstance(key, int):
+            key = key, ...
+
+        if not isinstance(key, tuple) and len(key) != 2:
+            raise ValueError("invalid key")
+
+        rows, cols = key
+        if rows is ...:
+            if isinstance(cols, int):
+                return self.columns[cols]  # Return column
+            elif isinstance(cols, list):   # Return Table with selected columns
+                table = self.copy()
+                table.columns = [self.columns[i] for i in cols]
+                if self.labels:
+                    table.labels = [self.labels[i] for i in cols]
+                return table
+        elif isinstance(rows, int):
+            if cols is ...:
+                return [column[rows] for column in self.columns]  # Return row
+            elif isinstance(cols, int):
+                return self.columns[cols][rows]
+        elif isinstance(rows, list):
+            if cols is ...:
+                return type(self)(
+                    *([column[row] for column in self.columns] for row in rows),
+                    labels=self.labels, centered=self.centered, padding=self.padding, style=self.style
+                )  # Return Table with selected rows
+
+        raise ValueError("invalid key")
 
     def __str__(self):
         if self._needs_rebuild:
@@ -177,7 +220,7 @@ class Table:
     def __repr__(self):
         return (
             f'{type(self).__name__}[{len(self.columns[0])}, {len(self.columns)}]'
-            f'(labels={bool(self.labels)}, centered={self.centered}, padding={self.padding}, style={self.style})'
+            f"(labels={bool(self.labels)}, centered={self.centered}, padding={self.padding}, style='{self.style}')"
         )
 
     def show(self):
