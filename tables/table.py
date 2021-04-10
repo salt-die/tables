@@ -152,11 +152,14 @@ class Table:
 
     @needs_rebuild
     def remove_column(self, index):
-        raise NotImplementedError
+        self.columns.pop(index)
+        if self.labels:
+            self.labels.pop(index)
 
     @needs_rebuild
     def remove_row(self, index):
-        raise NotImplementedError
+        for column in self.columns:
+            column.pop(index)
 
     def copy(self):
         table = type(self)()
@@ -164,13 +167,25 @@ class Table:
             setattr(table, attr, getattr(self, attr))
         return table
 
+    @needs_rebuild
+    def relabel(self, old, new):
+        """Replace the label `old` with the label `new`.
+        """
+        i = self.labels.index(old)
+        self.labels[i] = new
+
     def __setattr__(self, attr, value):
         if attr != '_needs_rebuild':  # Indicate that table needs to be rebuilt
             self._needs_rebuild = attr != '_as_string'
         super().__setattr__(attr, value)
 
-    def __setitem__(self, key):
-        raise NotImplementedError
+    @needs_rebuild
+    def __setitem__(self, key, item):
+        if not isinstance(key, tuple) and len(key) != 2 and not isinstance(key[0], int) and not isinstance(key[1], int):
+            raise ValueError("invalid key")
+
+        row, col = key
+        self.columns[col][row] = str(item).strip()
 
     def __getitem__(self, key):
         if isinstance(key, list):
@@ -198,11 +213,13 @@ class Table:
                 if self.labels:
                     table.labels = [self.labels[i] for i in cols]
                 return table
+
         elif isinstance(rows, int):
             if cols is ...:
                 return [column[rows] for column in self.columns]  # Return row
             elif isinstance(cols, int):
                 return self.columns[cols][rows]
+
         elif isinstance(rows, list):
             if cols is ...:
                 return type(self)(
