@@ -200,7 +200,7 @@ class Table:
     def __repr__(self):
         return (
             f'{type(self).__name__}[{len(self.columns[0])}, {len(self.columns)}]'
-            f'(centered={self.centered}, padding={self.padding}, style={self.style})'
+            f'(labels={bool(self.labels)}, centered={self.centered}, padding={self.padding}, style={self.style})'
         )
 
     def show(self):
