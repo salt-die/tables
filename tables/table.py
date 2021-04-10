@@ -47,12 +47,9 @@ class Table:
     def _build_table(self):
         """Creates a representation of this table as a string.
         """
-        self._needs_rebuild = False
-
         if not self.columns:
             self._as_string = ''
-
-        number_of_columns = len(self.columns)
+            return
 
         if self.labels:
             table = [[label] + column for label, column in strict_zip(self.labels, self.columns)]
@@ -70,15 +67,17 @@ class Table:
         v, h, tl, tm, tr, ml, x, mr, bl, bm, br = self.STYLES[self.style]
         pad = self.padding * " "
         horizontals = tuple(h * (len(item) + 2 * self.padding) for item in rows[0])
-        top = f'{tl}{tm.join(horizontals)}{tr}'
-        title = f'{ml}{x.join(horizontals)}{mr}'
-        bottom = f'{bl}{bm.join(horizontals)}{br}'
 
         rows = [f'{v}{pad}{f"{pad}{v}{pad}".join(row)}{pad}{v}' for row in rows]
 
+        top = f'{tl}{tm.join(horizontals)}{tr}'
         rows.insert(0, top)
+
         if self.labels:
+            title = f'{ml}{x.join(horizontals)}{mr}'
             rows.insert(2, title)
+
+        bottom = f'{bl}{bm.join(horizontals)}{br}'
         rows.append(bottom)
 
         self._as_string = "\n".join(rows)
@@ -88,7 +87,6 @@ class Table:
         return self._labels
 
     @labels.setter
-    @needs_rebuild
     def labels(self, new_labels):
         if new_labels is not None:
             new_labels = stringify(new_labels)
@@ -96,33 +94,6 @@ class Table:
                 raise ValueError("labels inconsistent with number of columns")
 
         self._labels = new_labels
-
-    @property
-    def centered(self):
-        return self._centered
-
-    @centered.setter
-    @needs_rebuild
-    def centered(self, is_centered):
-        self._centered = is_centered
-
-    @property
-    def padding(self):
-        return self._padding
-
-    @padding.setter
-    @needs_rebuild
-    def padding(self, pad_amount):
-        self._padding = pad_amount
-
-    @property
-    def style(self):
-        return self._style
-
-    @style.setter
-    @needs_rebuild
-    def style(self, style):
-        self._style = style
 
     @needs_rebuild
     def add_column(self, column=None, index=None, label=None, default=None):
@@ -186,6 +157,11 @@ class Table:
     @needs_rebuild
     def remove_row(self, index):
         raise NotImplementedError
+
+    def __setattr__(self, attr, value):
+        if attr != '_needs_rebuild':  # Indicate that table needs to be rebuilt
+            self._needs_rebuild = attr != '_as_string'
+        super().__setattr__(attr, value)
 
     def __setitem__(self, key):
         raise NotImplementedError
