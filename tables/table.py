@@ -1,4 +1,3 @@
-from functools import wraps
 from warnings import warn
 
 from .utils import strict_zip, stringify, needs_rebuild
@@ -39,19 +38,13 @@ class Table:
 
         self.columns = [stringify(column) for column in strict_zip(*rows)]
 
-        if labels is not None:
-            self.labels = stringify(labels)
-            if len(self.labels) != len(self.columns):
-                raise ValueError("labels inconsistent with number of columns")
-        else:
-            self.labels = None
-
+        self.labels = labels
         self.centered = centered
         self.padding = padding
         self.style = style
 
     def _build_table(self):
-        """Creates a representation of table as a string.
+        """Creates a representation of this table as a string.
         """
         self._needs_rebuild = False
 
@@ -63,7 +56,7 @@ class Table:
         if self.labels:
             table = [[label] + column for label, column in strict_zip(self.labels, self.columns)]
         else:
-            table = self.columns.copy()
+            table = [column.copy() for column in self.columns]
 
         # Strings in each column made same length
         for column in table:
@@ -88,6 +81,20 @@ class Table:
         rows.append(bottom)
 
         self._as_string = "\n".join(rows)
+
+    @property
+    def labels(self):
+        return self._labels
+
+    @labels.setter
+    @needs_rebuild
+    def labels(self, new_labels):
+        if new_labels is not None:
+            new_labels = stringify(new_labels)
+            if len(new_labels) != len(self.columns):
+                raise ValueError("labels inconsistent with number of columns")
+
+        self._labels = new_labels
 
     @property
     def centered(self):
