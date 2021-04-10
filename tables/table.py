@@ -31,6 +31,7 @@ class Table:
         "heavy" : "┃━┏┳┓┣╋┫┗┻┛",
         "double": "║═╔╦╗╠╬╣╚╩╝",
         "curved": "│─╭┬╮├┼┤╰┴╯",
+        'ascii' : '|-+++++++++',
     }
 
     def __init__(self, *rows, labels=None, centered=False, padding=1, style="light"):
