@@ -35,8 +35,6 @@ class Table:
     }
 
     def __init__(self, *rows, labels=None, centered=False, padding=1, style="light"):
-        self._needs_rebuild = True
-
         self.columns = [stringify(column) for column in strict_zip(*rows)]
 
         self.labels = labels
@@ -192,9 +190,13 @@ class Table:
             if isinstance(key[0], int):
                 key = key, ...
             elif isinstance(key[0], str):
+                if not self.labels:
+                    raise ValueError('table has no labels')
                 key = ..., [self.labels.index(label) for label in key]
 
         elif isinstance(key, str):
+            if not self.labels:
+                raise ValueError('table has no labels')
             key = ..., self.labels.index(key)
 
         elif isinstance(key, int):
