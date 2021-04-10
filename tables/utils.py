@@ -1,3 +1,5 @@
+from functools import wraps
+
 def _next_all(*iterables):
     """Yield the next item in each iterable or raise an error if each iterable doesn't raise a `StopIteration`
     """
