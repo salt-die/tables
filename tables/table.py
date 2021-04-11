@@ -7,6 +7,10 @@ class Table:
     """
     Pretty-prints tabular data.
 
+    Notes
+    -----
+    `styles` can be one of 'light', 'heavy', 'double', 'curved', 'ascii'.
+
     Example
     -------
     ```
@@ -25,6 +29,7 @@ class Table:
     └────────────┴────────────────┴──────────────┘
     ```
     """
+    __slots__ = 'columns', 'centered', 'padding', 'style', '_needs_rebuild', '_as_string', '_labels'
 
     STYLES = {
         "light" : "│─┌┬┐├┼┤└┴┘",
@@ -173,9 +178,10 @@ class Table:
         self.labels[i] = new
 
     def __setattr__(self, attr, value):
+        super().__setattr__(attr, value)
+
         if attr != '_needs_rebuild':  # Indicate that table needs to be rebuilt
             self._needs_rebuild = attr != '_as_string'
-        super().__setattr__(attr, value)
 
     @needs_rebuild
     def __setitem__(self, key, item):
