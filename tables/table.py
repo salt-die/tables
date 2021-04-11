@@ -9,7 +9,7 @@ class Table:
 
     Notes
     -----
-    `styles` can be one of 'light', 'heavy', 'double', 'curved', 'ascii'.
+    Table.STYLES contains the various options for `styles` kwarg.
 
     Example
     -------
@@ -41,11 +41,13 @@ class Table:
     )
 
     STYLES = {
-        "light" : "│─┌┬┐├┼┤└┴┘",
-        "heavy" : "┃━┏┳┓┣╋┫┗┻┛",
-        "double": "║═╔╦╗╠╬╣╚╩╝",
-        "curved": "│─╭┬╮├┼┤╰┴╯",
-        'ascii' : '|-+++++++++',
+        "light"            : "│─┌┬┐├┼┤└┴┘",
+        "heavy"            : "┃━┏┳┓┣╋┫┗┻┛",
+        "curved"           : "│─╭┬╮├┼┤╰┴╯",
+        'ascii'            : '|-+++++++++',
+        "double"           : "║═╔╦╗╠╬╣╚╩╝",
+        'double-vertical'  : '║─╓╥╖╟╫╢╙╨╜',
+        'double-horizontal': '│═╒╤╕╞╪╡╘╧╛',
     }
 
     def __init__(self, *rows, labels=None, centered=False, padding=1, style="light"):
@@ -164,6 +166,14 @@ class Table:
 
     @needs_rebuild
     def remove_column(self, index):
+        """
+        Notes
+        -----
+        'index' can also be a column label
+        """
+        if isinstance(index, str):
+            index = self.labels.index(index)
+
         self.columns.pop(index)
         if self.labels:
             self.labels.pop(index)
