@@ -175,7 +175,9 @@ class Table:
 
     def copy(self):
         table = type(self)()
-        for attr in ('columns', 'labels', 'centered', 'padding', 'style'):
+        for attr in type(self).__slots__:
+            if attr == '_as_string':  # A newly created table might not have this attribute.
+                continue
             setattr(table, attr, getattr(self, attr))
         return table
 
