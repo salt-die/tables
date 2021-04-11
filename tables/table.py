@@ -29,7 +29,16 @@ class Table:
     └────────────┴────────────────┴──────────────┘
     ```
     """
-    __slots__ = 'columns', 'centered', 'padding', 'style', '_needs_rebuild', '_as_string', '_labels'
+
+    __slots__ = (
+        '_needs_rebuild',
+        'columns',
+        '_labels',
+        'centered',
+        'padding',
+        'style',
+        '_as_string',
+    )
 
     STYLES = {
         "light" : "│─┌┬┐├┼┤└┴┘",
