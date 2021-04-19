@@ -36,18 +36,21 @@ class Table:
         '_labels',
         'centered',
         'padding',
-        'style',
+        '_style',
         '_as_string',
     )
 
     STYLES = {
-        "light"            : "│─┌┬┐├┼┤└┴┘",
-        "heavy"            : "┃━┏┳┓┣╋┫┗┻┛",
-        "curved"           : "│─╭┬╮├┼┤╰┴╯",
-        'ascii'            : '|-+++++++++',
-        "double"           : "║═╔╦╗╠╬╣╚╩╝",
-        'double-vertical'  : '║─╓╥╖╟╫╢╙╨╜',
-        'double-horizontal': '│═╒╤╕╞╪╡╘╧╛',
+        "light"            : "│─│─┌┬┐├┼┤└┴┘",
+        "heavy"            : "┃━┃━┏┳┓┣╋┫┗┻┛",
+        'light-inner'      : '  │─ ╷ ╶┼╴ ╵ ',
+        'heavy-inner'      : '  ┃━ ╻ ╺╋╸ ╹ ',
+        "curved"           : "│─│─╭┬╮├┼┤╰┴╯",
+        'ascii'            : '|-|-+++++++++',
+        "double"           : "║═║═╔╦╗╠╬╣╚╩╝",
+        'double-vertical'  : '║─║─╓╥╖╟╫╢╙╨╜',
+        'double-horizontal': '│═│═╒╤╕╞╪╡╘╧╛',
+        'whitespace'       : '             ',
     }
 
     def __init__(self, *rows, labels=None, centered=False, padding=1, style="light"):
@@ -78,23 +81,28 @@ class Table:
 
         rows = list(strict_zip(*table))  # Transpose
 
-        v, h, tl, tm, tr, ml, x, mr, bl, bm, br = self.STYLES[self.style]
+        # For brevity's sake, we've given our line characters short names.  Respectively, they stand for:
+        # outer-vertical, outer-horizontal, inner-vertical, inner-horizontal, top-left, top-middle, top-right
+        # middle-left, 'x' for 'cross', middle-right, bottom-left, bottom-middle, bottom-right
+        ov, oh, iv, ih, tl, tm, tr, ml, x, mr, bl, bm, br = self.STYLES[self.style]
         pad = self.padding * " "
-        horizontals = tuple(h * (len(item) + 2 * self.padding) for item in rows[0])
 
-        rows = [f'{v}{pad}{f"{pad}{v}{pad}".join(row)}{pad}{v}' for row in rows]
+        outer_horiz = tuple(oh * (len(item) + 2 * self.padding) for item in rows[0])
 
-        top = f'{tl}{tm.join(horizontals)}{tr}'
-        rows.insert(0, top)
+        joined_rows = [f'{ov}{pad}{f"{pad}{iv}{pad}".join(row)}{pad}{ov}' for row in rows]
+
+        top = f'{tl}{tm.join(outer_horiz)}{tr}'
+        joined_rows.insert(0, top)
 
         if self.labels:
-            title = f'{ml}{x.join(horizontals)}{mr}'
-            rows.insert(2, title)
+            inner_horiz = (ih * (len(item) + 2 * self.padding) for item in rows[0])
+            title = f'{ml}{x.join(inner_horiz)}{mr}'
+            joined_rows.insert(2, title)
 
-        bottom = f'{bl}{bm.join(horizontals)}{br}'
-        rows.append(bottom)
+        bottom = f'{bl}{bm.join(outer_horiz)}{br}'
+        joined_rows.append(bottom)
 
-        self._as_string = "\n".join(rows)
+        self._as_string = "\n".join(joined_rows)
 
     @property
     def labels(self):
@@ -108,6 +116,17 @@ class Table:
                 raise ValueError("labels inconsistent with number of columns")
 
         self._labels = new_labels
+
+    @property
+    def style(self):
+        return self._style
+
+    @style.setter
+    def style(self, style):
+        if style not in self.STYLES:
+            styles = "', '".join(self.STYLES)
+            raise ValueError(f"Style must be one of '{styles}'")
+        self._style = style
 
     @needs_rebuild
     def add_column(self, column=None, index=None, label=None, default=None):
