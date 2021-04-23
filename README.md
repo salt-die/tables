@@ -1,7 +1,7 @@
 # Tables
 
 Pretty print tabular data:
-```
+```py
 >>> t = Table(
 ...     ['John Smith', '356 Grove Rd', '123-4567'],
 ...     ['Mary Sue', '311 Penny Lane', '555-2451'],
@@ -16,7 +16,7 @@ Pretty print tabular data:
 │ Mary Sue   │ 311 Penny Lane │ 555-2451     │
 └────────────┴────────────────┴──────────────┘
 ```
-```
+```py
 >>> t = Table(
 ...     ['spotted','dog','pants','heavily'],
 ...     ['black','cat','meows','loudly'],
