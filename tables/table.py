@@ -47,12 +47,13 @@ class Table:
 
     __slots__ = (
         '_needs_rebuild',
+        '_as_string',
         'columns',
         '_labels',
         'centered',
         'padding',
         '_style',
-        '_as_string',
+        'title',
     )
 
     STYLES = {
@@ -68,13 +69,14 @@ class Table:
         'whitespace'       : '             ',
     }
 
-    def __init__(self, *rows, labels=None, centered=False, padding=1, style="light"):
+    def __init__(self, *rows, labels=None, centered=False, padding=1, style="light", title=None):
         self.columns = [stringify(column) for column in strict_zip(*rows)]
 
         self.labels = labels
         self.centered = centered
         self.padding = padding
         self.style = style
+        self.title = title
 
     def _build_table(self):
         """Creates a representation of this table as a string.
@@ -99,23 +101,27 @@ class Table:
         # For brevity's sake, we've given our line characters short names.  Respectively, they stand for:
         # outer-vertical, outer-horizontal, inner-vertical, inner-horizontal, top-left, top-middle, top-right
         # middle-left, 'x' for 'cross', middle-right, bottom-left, bottom-middle, bottom-right
-        ov, oh, iv, ih, tl, tm, tr, ml, x, mr, bl, bm, br = self.STYLES[self.style]
+        ov, oh, iv, ih, tl, tm, tr, ml, x, mr, bl, bm, br = Table.STYLES[self.style]
         pad = self.padding * " "
-
-        outer_horiz = tuple(oh * (len(item) + 2 * self.padding) for item in rows[0])
 
         joined_rows = [f'{ov}{pad}{f"{pad}{iv}{pad}".join(row)}{pad}{ov}' for row in rows]
 
-        top = f'{tl}{tm.join(outer_horiz)}{tr}'
-        joined_rows.insert(0, top)
+        outer_horiz = tuple(oh * (len(item) + 2 * self.padding) for item in rows[0])
+
+        top_border = f'{tl}{tm.join(outer_horiz)}{tr}'
+        joined_rows.insert(0, top_border)
 
         if self.labels:
             inner_horiz = (ih * (len(item) + 2 * self.padding) for item in rows[0])
-            title = f'{ml}{x.join(inner_horiz)}{mr}'
-            joined_rows.insert(2, title)
+            label_border = f'{ml}{x.join(inner_horiz)}{mr}'
+            joined_rows.insert(2, label_border)
 
-        bottom = f'{bl}{bm.join(outer_horiz)}{br}'
-        joined_rows.append(bottom)
+        if self.title:
+            title_width = len(joined_rows[0])
+            joined_rows.insert(0, self.title.center(title_width))
+
+        bottom_border = f'{bl}{bm.join(outer_horiz)}{br}'
+        joined_rows.append(bottom_border)
 
         self._as_string = "\n".join(joined_rows)
 
@@ -138,8 +144,8 @@ class Table:
 
     @style.setter
     def style(self, style):
-        if style not in self.STYLES:
-            styles = "', '".join(self.STYLES)
+        if style not in Table.STYLES:
+            styles = "', '".join(Table.STYLES)
             raise ValueError(f"Style must be one of '{styles}'")
         self._style = style
 
