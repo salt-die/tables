@@ -9,6 +9,21 @@ class Table:
 
     Notes
     -----
+    Tables have fancy indexing, table below describes possible keys:
+                               ╷
+          key                  │ value
+        ╶──────────────────────┼──────────────────────────────────────────────────╴
+          `n: int`             │ row `n`
+          `..., m: int`        │ column `m`
+          `n: int, m:int`      │ cell `n, m`
+          `label: str`         │ column labeled `label`
+          `ns: list[int]`      │ Table with rows selected from `ns`
+          `..., ms: list[int]` │ Table with columns seleced from `ms`
+          `labels: list[str]`  │ Table with columns with labels given by `labels`
+                               ╵
+
+    Additional Notes
+    ----------------
     Table.STYLES contains the various options for `styles` kwarg.
 
     Example
@@ -231,6 +246,20 @@ class Table:
         self.columns[col][row] = str(item).strip()
 
     def __getitem__(self, key):
+        """
+        Tables have fancy indexing, table below describes possible keys:
+                               ╷
+          key                  │ value
+        ╶──────────────────────┼──────────────────────────────────────────────────╴
+          `n: int`             │ row `n`
+          `..., m: int`        │ column `m`
+          `n: int, m:int`      │ cell `n, m`
+          `label: str`         │ column labeled `label`
+          `ns: list[int]`      │ Table with rows selected from `ns`
+          `..., ms: list[int]` │ Table with columns seleced from `ms`
+          `labels: list[str]`  │ Table with columns with labels given by `labels`
+                               ╵
+        """
         if isinstance(key, list):
             if isinstance(key[0], int):
                 key = key, ...
@@ -274,7 +303,7 @@ class Table:
                     labels=self.labels, centered=self.centered, padding=self.padding, style=self.style
                 )  # Return Table with selected rows
 
-        raise ValueError("invalid key")
+        raise KeyError(key)
 
     def __str__(self):
         if self._needs_rebuild:
@@ -289,3 +318,17 @@ class Table:
 
     def show(self):
         print(str(self))
+
+
+t = Table(
+    ['`n: int`', 'row `n`'],
+    ['`..., m: int`', 'column `m`'],
+    ['`n: int, m:int`', 'cell `n, m`'],
+    ['`label: str`', 'column labeled `label`'],
+    ['`ns: list[int]`', 'Table with rows selected from `ns`'],
+    ['`..., ms: list[int]`', 'Table with columns seleced from `ms`'],
+    ['`labels: list[str]`', 'Table with columns with labels given by `labels`'],
+    labels=['key', 'value'],
+    centered=True,
+    style='light-inner',
+)
