@@ -54,6 +54,7 @@ class Table:
         'padding',
         '_style',
         'title',
+        'min_width',
     )
 
     STYLES = {
@@ -69,7 +70,7 @@ class Table:
         'whitespace'       : '             ',
     }
 
-    def __init__(self, *rows, labels=None, centered=False, padding=1, style="light", title=None):
+    def __init__(self, *rows, labels=None, centered=False, padding=1, style="light", title=None, min_width=0):
         self.columns = [stringify(column) for column in strict_zip(*rows)]
 
         self.labels = labels
@@ -77,6 +78,7 @@ class Table:
         self.padding = padding
         self.style = style
         self.title = title
+        self.min_width = 0
 
     def _build_table(self):
         """Creates a representation of this table as a string.
@@ -93,8 +95,9 @@ class Table:
         # Strings in each column made same length
         for column in table:
             max_length = max(map(len, column))
+            width = max(max_length, self.min_width)
             for i, item in enumerate(column):
-                column[i] = f'{item:^{max_length}}' if self.centered else f'{item:<{max_length}}'
+                column[i] = f'{item:^{width}}' if self.centered else f'{item:<{width}}'
 
         rows = list(strict_zip(*table))  # Transpose
 
@@ -319,22 +322,9 @@ class Table:
     def __repr__(self):
         return (
             f'{type(self).__name__}[{len(self.columns[0])}, {len(self.columns)}]'
-            f"(labels={bool(self.labels)}, centered={self.centered}, padding={self.padding}, style='{self.style}')"
+            f'(labels={bool(self.labels)}, centered={self.centered}, padding={self.padding}, style={self.style!r}, '
+            f'title={self.title!r}, min_width={self.min_width})'
         )
 
     def show(self):
         print(str(self))
-
-
-t = Table(
-    ['`n: int`', 'row `n`'],
-    ['`..., m: int`', 'column `m`'],
-    ['`n: int, m:int`', 'cell `n, m`'],
-    ['`label: str`', 'column labeled `label`'],
-    ['`ns: list[int]`', 'Table with rows selected from `ns`'],
-    ['`..., ms: list[int]`', 'Table with columns seleced from `ms`'],
-    ['`labels: list[str]`', 'Table with columns with labels given by `labels`'],
-    labels=['key', 'value'],
-    centered=True,
-    style='light-inner',
-)
