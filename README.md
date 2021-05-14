@@ -46,3 +46,19 @@ Pretty print tabular data:
 ║      a      ║      red      ║   fox    ║   jumped   ║   incredibly   ║
 ╚═════════════╩═══════════════╩══════════╩════════════╩════════════════╝
 ```
+
+Tables have fancy indexing, table below describes possible keys:
+
+```
+                         ╷
+    key                  │ value
+  ╶──────────────────────┼──────────────────────────────────────────────────╴
+    n: int               │ row `n`
+    ..., m: int          │ column `m`
+    n: int, m:int        │ cell `n, m`
+    label: str           │ column labeled `label`
+    ns: list[int]        │ Table with rows selected from `ns`
+    ..., ms: list[int]   │ Table with columns seleced from `ms`
+    labels: list[str]    │ Table with columns with labels given by `labels`
+                         ╵
+```
