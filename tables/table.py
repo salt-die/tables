@@ -156,8 +156,8 @@ class Table:
     @style.setter
     def style(self, style):
         if style not in Table.STYLES:
-            styles = "', '".join(Table.STYLES)
-            raise ValueError(f"Style must be one of '{styles}'")
+            styles = ', '.join(map(repr, Table.STYLES))
+            raise ValueError(f'Style must be one of {styles}')
         self._style = style
 
     @needs_rebuild
