@@ -58,16 +58,16 @@ class Table:
     )
 
     STYLES = {
-        "light"            : "│─│─┌┬┐├┼┤└┴┘",
-        "heavy"            : "┃━┃━┏┳┓┣╋┫┗┻┛",
-        'light-inner'      : '  │─ ╷ ╶┼╴ ╵ ',
-        'heavy-inner'      : '  ┃━ ╻ ╺╋╸ ╹ ',
-        "curved"           : "│─│─╭┬╮├┼┤╰┴╯",
-        'ascii'            : '|-|-+++++++++',
-        "double"           : "║═║═╔╦╗╠╬╣╚╩╝",
-        'double-vertical'  : '║─║─╓╥╖╟╫╢╙╨╜',
-        'double-horizontal': '│═│═╒╤╕╞╪╡╘╧╛',
-        'whitespace'       : '             ',
+        "light"            : "│─│─┌┬┐├┼┤└┴┘┬",
+        "heavy"            : "┃━┃━┏┳┓┣╋┫┗┻┛┳",
+        'light-inner'      : '  │─ ╷ ╶┼╴ ╵ ┬',
+        'heavy-inner'      : '  ┃━ ╻ ╺╋╸ ╹ ┳',
+        "curved"           : "│─│─╭┬╮├┼┤╰┴╯┬",
+        'ascii'            : '|-|-++++++++++',
+        "double"           : "║═║═╔╦╗╠╬╣╚╩╝╦",
+        'double-vertical'  : '║─║─╓╥╖╟╫╢╙╨╜╥',
+        'double-horizontal': '│═│═╒╤╕╞╪╡╘╧╛╤',
+        'whitespace'       : '              ',
     }
 
     def __init__(self, *rows, labels=None, centered=False, padding=1, style="light", title=None, min_width=0):
@@ -103,36 +103,35 @@ class Table:
 
         # For brevity's sake, we've given our line characters short names.  Respectively, they stand for:
         # outer-vertical, outer-horizontal, inner-vertical, inner-horizontal, top-left, top-middle, top-right
-        # middle-left, 'x' for 'cross', middle-right, bottom-left, bottom-middle, bottom-right
-        ov, oh, iv, ih, tl, tm, tr, ml, x, mr, bl, bm, br = Table.STYLES[self.style]
+        # middle-left, 'x' for 'cross', middle-right, bottom-left, bottom-middle, bottom-right, top-middle-inner
+        ov, oh, iv, ih, tl, tm, tr, ml, x, mr, bl, bm, br, tmi = Table.STYLES[self.style]
         pad = self.padding * " "
 
         joined_rows = [f'{ov}{pad}{f"{pad}{iv}{pad}".join(row)}{pad}{ov}' for row in rows]
 
         outer_horiz = tuple(oh * (len(item) + 2 * self.padding) for item in rows[0])
-
-        top_border = f'{tl}{tm.join(outer_horiz)}{tr}'
-        joined_rows.insert(0, top_border)
-
-        bottom_border = f'{bl}{bm.join(outer_horiz)}{br}'
-        joined_rows.append(bottom_border)
+        inner_horiz = tuple(ih * (len(item) + 2 * self.padding) for item in rows[0])
 
         if self.labels:
-            inner_horiz = (ih * (len(item) + 2 * self.padding) for item in rows[0])
-            label_border = f'{ml}{x.join(inner_horiz)}{mr}'
-            joined_rows.insert(2, label_border)
+            label_border_bottom = f'{ml}{x.join(inner_horiz)}{mr}'
+            joined_rows.insert(1, label_border_bottom)
 
         if self.title:
-            joined_rows[0] = f'{ml}{joined_rows[0][1:-1]}{mr}'  # Current top of table needs outer characters to be modified.
-
             max_title_width = len(joined_rows[0]) - 2 * self.padding - 2
             if len(self.title) > max_title_width:
                 title = f'{ov}{pad}{self.title[:max_title_width - 3]}...{pad}{ov}'
             else:
                 title = f'{ov}{pad}{self.title:^{max_title_width}}{pad}{ov}'
 
-            title_border = f'{tl}{oh * (max_title_width + 2 * self.padding)}{tr}'
-            joined_rows = [title_border, title] + joined_rows
+            title_border_top = f'{tl}{oh * (max_title_width + 2 * self.padding)}{tr}'
+            title_border_bottom = f'{ml}{tmi.join(inner_horiz)}{mr}'
+            joined_rows = [title_border_top, title, title_border_bottom] + joined_rows
+        else:
+            top_border =  f'{tl}{tm.join(outer_horiz)}{tr}'
+            joined_rows.insert(0, top_border)
+
+        bottom_border = f'{bl}{bm.join(outer_horiz)}{br}'
+        joined_rows.append(bottom_border)
 
         self._as_string = "\n".join(joined_rows)
 
