@@ -315,10 +315,9 @@ class Table:
 
         elif isinstance(rows, list):
             if cols is ...:
-                return type(self)(
-                    *([column[row] for column in self.columns] for row in rows),
-                    labels=self.labels, centered=self.centered, padding=self.padding, style=self.style
-                )  # Return Table with selected rows
+                table = self.copy()
+                table.columns = [[column[row] for row in rows] for column in self.columns]
+                return table
 
         raise KeyError(key)
 
