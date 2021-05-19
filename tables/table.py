@@ -88,21 +88,21 @@ class Table:
             return
 
         if self.labels:
-            table = [[label] + column for label, column in strict_zip(self.labels, self.columns)]
+            columns = [[label] + column for label, column in strict_zip(self.labels, self.columns)]
         else:
-            table = [column.copy() for column in self.columns]
+            columns = [column.copy() for column in self.columns]
 
         padding = self.padding
         pad = ' ' * padding
 
         # Strings in each column made same length
-        for column in table:
+        for column in columns:
             max_length = max(map(len, column))
             width = max(max_length, self.min_width)
             for i, item in enumerate(column):
                 column[i] = f'{pad}{item:^{width}}{pad}' if self.centered else f'{pad}{item:<{width}}{pad}'
 
-        rows = list(strict_zip(*table))  # Transpose
+        rows = list(strict_zip(*columns))  # Transpose
 
         # For brevity's sake, we've given our line characters short names.  Respectively, they stand for:
         # outer-vertical, outer-horizontal, inner-vertical, inner-horizontal, top-left, top-middle, top-right
