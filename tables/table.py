@@ -58,13 +58,13 @@ class Table:
     )
 
     STYLES = {
-        "light"            : "│─│─┌┬┐├┼┤└┴┘┬",
-        "heavy"            : "┃━┃━┏┳┓┣╋┫┗┻┛┳",
+        "light"            : '│─│─┌┬┐├┼┤└┴┘┬',
+        "heavy"            : '┃━┃━┏┳┓┣╋┫┗┻┛┳',
         'light-inner'      : '  │─ ╷ ╶┼╴ ╵ ┬',
         'heavy-inner'      : '  ┃━ ╻ ╺╋╸ ╹ ┳',
-        "curved"           : "│─│─╭┬╮├┼┤╰┴╯┬",
+        "curved"           : '│─│─╭┬╮├┼┤╰┴╯┬',
         'ascii'            : '|-|-++++++++++',
-        "double"           : "║═║═╔╦╗╠╬╣╚╩╝╦",
+        "double"           : '║═║═╔╦╗╠╬╣╚╩╝╦',
         'double-vertical'  : '║─║─╓╥╖╟╫╢╙╨╜╥',
         'double-horizontal': '│═│═╒╤╕╞╪╡╘╧╛╤',
         'whitespace'       : '              ',
@@ -92,12 +92,15 @@ class Table:
         else:
             table = [column.copy() for column in self.columns]
 
+        padding = self.padding
+        pad = ' ' * padding
+
         # Strings in each column made same length
         for column in table:
             max_length = max(map(len, column))
             width = max(max_length, self.min_width)
             for i, item in enumerate(column):
-                column[i] = f'{item:^{width}}' if self.centered else f'{item:<{width}}'
+                column[i] = f'{pad}{item:^{width}}{pad}' if self.centered else f'{pad}{item:<{width}}{pad}'
 
         rows = list(strict_zip(*table))  # Transpose
 
@@ -105,12 +108,12 @@ class Table:
         # outer-vertical, outer-horizontal, inner-vertical, inner-horizontal, top-left, top-middle, top-right
         # middle-left, 'x' for 'cross', middle-right, bottom-left, bottom-middle, bottom-right, top-middle-inner
         ov, oh, iv, ih, tl, tm, tr, ml, x, mr, bl, bm, br, tmi = Table.STYLES[self.style]
-        pad = self.padding * " "
 
-        joined_rows = [f'{ov}{pad}{f"{pad}{iv}{pad}".join(row)}{pad}{ov}' for row in rows]
 
-        outer_horiz = tuple(oh * (len(item) + 2 * self.padding) for item in rows[0])
-        inner_horiz = tuple(ih * (len(item) + 2 * self.padding) for item in rows[0])
+        joined_rows = [f'{ov}{f"{iv}".join(row)}{ov}' for row in rows]
+
+        outer_horiz = tuple(oh * len(item) for item in rows[0])
+        inner_horiz = tuple(ih * len(item) for item in rows[0])
 
         if self.labels:
             label_border_bottom = f'{ml}{x.join(inner_horiz)}{mr}'
@@ -123,7 +126,7 @@ class Table:
             else:
                 title = f'{ov}{pad}{self.title:^{max_title_width}}{pad}{ov}'
 
-            title_border_top = f'{tl}{oh * (max_title_width + 2 * self.padding)}{tr}'
+            title_border_top = f'{tl}{oh * (max_title_width + 2 * padding)}{tr}'
             title_border_bottom = f'{ml}{tmi.join(inner_horiz)}{mr}'
             joined_rows = [title_border_top, title, title_border_bottom] + joined_rows
         else:
@@ -133,7 +136,7 @@ class Table:
         bottom_border = f'{bl}{bm.join(outer_horiz)}{br}'
         joined_rows.append(bottom_border)
 
-        self._as_string = "\n".join(joined_rows)
+        self._as_string = '\n'.join(joined_rows)
 
     @property
     def labels(self):
@@ -144,7 +147,7 @@ class Table:
         if new_labels is not None:
             new_labels = stringify(new_labels)
             if len(new_labels) != len(self.columns):
-                raise ValueError("labels inconsistent with number of columns")
+                raise ValueError('labels inconsistent with number of columns')
 
         self._labels = new_labels
 
@@ -164,16 +167,16 @@ class Table:
         """Add a new column to the table.
         """
         if column is None and default is None:
-            raise ValueError("need column data or a default value")
+            raise ValueError('need column data or a default value')
 
         if column is not None and default is not None:
-            warn("default ignored if column provided")
+            warn('default ignored if column provided')
 
         if self.labels is not None and label is None:
-            raise ValueError("label is required")
+            raise ValueError('label is required')
 
         if self.labels is None and label is not None:
-            warn(f"label ignored: {type(self).__name__} has no labels")
+            warn(f'label ignored: {type(self).__name__} has no labels')
 
         if index is None:
             index = len(self.columns)
@@ -182,7 +185,7 @@ class Table:
             column_as_strings = stringify(column)
 
             if self.columns and len(column_as_strings) != len(self.columns[0]):
-                raise ValueError("column length mismatch")
+                raise ValueError('column length mismatch')
 
             self.columns.insert(index, column_as_strings)
         else:
@@ -201,12 +204,12 @@ class Table:
         row_as_strings = stringify(row)
 
         if not self.columns:
-            warn("no columns: expanding table to fit row")
+            warn('no columns: expanding table to fit row')
             self.columns = [[item] for item in row_as_strings]
             return
 
         if len(row_as_strings) != len(self.columns):
-            raise ValueError("row length mismatch")
+            raise ValueError('row length mismatch')
 
         if index is None:
             index = len(self.columns[0])
@@ -256,7 +259,7 @@ class Table:
     @needs_rebuild
     def __setitem__(self, key, item):
         if not isinstance(key, tuple) and len(key) != 2 and not isinstance(key[0], int) and not isinstance(key[1], int):
-            raise ValueError("invalid key")
+            raise ValueError('invalid key')
 
         row, col = key
         self.columns[col][row] = str(item).strip()
@@ -293,7 +296,7 @@ class Table:
             key = key, ...
 
         if not isinstance(key, tuple) and len(key) != 2:
-            raise ValueError("invalid key")
+            raise ValueError('invalid key')
 
         rows, cols = key
         if rows is ...:
@@ -331,6 +334,3 @@ class Table:
             f'(labels={bool(self.labels)}, centered={self.centered}, padding={self.padding}, style={self.style!r}, '
             f'title={self.title!r}, min_width={self.min_width})'
         )
-
-    def show(self):
-        print(str(self))
