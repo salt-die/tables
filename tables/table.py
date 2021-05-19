@@ -114,23 +114,25 @@ class Table:
         top_border = f'{tl}{tm.join(outer_horiz)}{tr}'
         joined_rows.insert(0, top_border)
 
+        bottom_border = f'{bl}{bm.join(outer_horiz)}{br}'
+        joined_rows.append(bottom_border)
+
         if self.labels:
             inner_horiz = (ih * (len(item) + 2 * self.padding) for item in rows[0])
             label_border = f'{ml}{x.join(inner_horiz)}{mr}'
             joined_rows.insert(2, label_border)
 
-        bottom_border = f'{bl}{bm.join(outer_horiz)}{br}'
-        joined_rows.append(bottom_border)
-
         if self.title:
-            title = f'{pad}{self.title}{pad}'
-            if len(title) > len(joined_rows[0]):
-                for i, row in enumerate(joined_rows):
-                    joined_rows[i] = row.center(len(title))
-            else:
-                title = title.center(len(joined_rows[0]))
+            joined_rows[0] = f'{ml}{joined_rows[0][1:-1]}{mr}'  # Current top of table needs outer characters to be modified.
 
-            joined_rows.insert(0, title)
+            max_title_width = len(joined_rows[0]) - 2 * self.padding - 2
+            if len(self.title) > max_title_width:
+                title = f'{ov}{pad}{self.title[:max_title_width - 3]}...{pad}{ov}'
+            else:
+                title = f'{ov}{pad}{self.title:^{max_title_width}}{pad}{ov}'
+
+            title_border = f'{tl}{oh * (max_title_width + 2 * self.padding)}{tr}'
+            joined_rows = [title_border, title] + joined_rows
 
         self._as_string = "\n".join(joined_rows)
 
