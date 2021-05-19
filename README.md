@@ -50,15 +50,16 @@ Pretty print tabular data:
 Tables have fancy indexing, table below describes possible keys:
 
 ```
-                         ╷
-    key                  │ value
-  ╶──────────────────────┼──────────────────────────────────────────────────╴
-    n: int               │ row `n`
-    ..., m: int          │ column `m`
-    n: int, m:int        │ cell `n, m`
-    label: str           │ column labeled `label`
-    ns: list[int]        │ Table with rows selected from `ns`
-    ..., ms: list[int]   │ Table with columns seleced from `ms`
-    labels: list[str]    │ Table with columns with labels given by `labels`
-                         ╵
+                                 ╷
+               key               │                      value
+╶────────────────────────────────┼─────────────────────────────────────────────────╴
+             `n: int`            │                     row `n`
+          `..., m: int`          │                   column `m`
+         `n: int, m:int`         │                   cell `n, m`
+           `label: str`          │             column labeled `label`
+         `ns: list[int]`         │       Table with rows selected from `ns`
+       `..., ms: list[int]`      │      Table with columns selected from `ms`
+  `ns: list[int], ms: list[int]` │ Table with rows from `ns` and columns from `ms`
+       `labels: list[str]`       │  Table with columns with labels from `labels`
+                                 ╵
 ```

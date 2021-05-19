@@ -10,17 +10,18 @@ class Table:
     Notes
     -----
     Tables have fancy indexing, table below describes possible keys:
-                               ╷
-          key                  │ value
-        ╶──────────────────────┼──────────────────────────────────────────────────╴
-          `n: int`             │ row `n`
-          `..., m: int`        │ column `m`
-          `n: int, m:int`      │ cell `n, m`
-          `label: str`         │ column labeled `label`
-          `ns: list[int]`      │ Table with rows selected from `ns`
-          `..., ms: list[int]` │ Table with columns seleced from `ms`
-          `labels: list[str]`  │ Table with columns with labels given by `labels`
-                               ╵
+                                     ╷
+                   key               │                      value
+    ╶────────────────────────────────┼─────────────────────────────────────────────────╴
+                 `n: int`            │                     row `n`
+              `..., m: int`          │                   column `m`
+             `n: int, m:int`         │                   cell `n, m`
+               `label: str`          │             column labeled `label`
+             `ns: list[int]`         │       Table with rows selected from `ns`
+           `..., ms: list[int]`      │      Table with columns selected from `ms`
+      `ns: list[int], ms: list[int]` │ Table with rows from `ns` and columns from `ms`
+           `labels: list[str]`       │  Table with columns with labels from `labels`
+                                     ╵
 
     Additional Notes
     ----------------
@@ -266,17 +267,18 @@ class Table:
     def __getitem__(self, key):
         """
         Tables have fancy indexing, table below describes possible keys:
-                               ╷
-          key                  │ value
-        ╶──────────────────────┼──────────────────────────────────────────────────╴
-          `n: int`             │ row `n`
-          `..., m: int`        │ column `m`
-          `n: int, m:int`      │ cell `n, m`
-          `label: str`         │ column labeled `label`
-          `ns: list[int]`      │ Table with rows selected from `ns`
-          `..., ms: list[int]` │ Table with columns seleced from `ms`
-          `labels: list[str]`  │ Table with columns with labels given by `labels`
-                               ╵
+                                         ╷
+                       key               │                      value
+        ╶────────────────────────────────┼─────────────────────────────────────────────────╴
+                     `n: int`            │                     row `n`
+                  `..., m: int`          │                   column `m`
+                 `n: int, m:int`         │                   cell `n, m`
+                   `label: str`          │             column labeled `label`
+                 `ns: list[int]`         │       Table with rows selected from `ns`
+               `..., ms: list[int]`      │      Table with columns selected from `ms`
+          `ns: list[int], ms: list[int]` │ Table with rows from `ns` and columns from `ms`
+               `labels: list[str]`       │  Table with columns with labels from `labels`
+                                         ╵
         """
         if isinstance(key, list):
             if isinstance(key[0], int):
@@ -318,6 +320,13 @@ class Table:
             if cols is ...:
                 table = self.copy()
                 table.columns = [[column[row] for row in rows] for column in self.columns]
+                return table
+            elif isinstance(cols, list):
+                table = self.copy()
+                columns = [self.columns[i] for i in cols]
+                table.columns = [[column[row] for row in rows] for column in columns]
+                if self.labels:
+                    table.labels = [self.labels[i] for i in cols]
                 return table
 
         raise KeyError(key)
