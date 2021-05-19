@@ -96,31 +96,29 @@ class Table:
         padding = self.padding
         pad = ' ' * padding
 
-        # Strings in each column made same length
+        # Strings in each column will be made same length.
         for column in columns:
             max_length = max(map(len, column))
             width = max(max_length, self.min_width)
             for i, item in enumerate(column):
                 column[i] = f'{pad}{item:^{width}}{pad}' if self.centered else f'{pad}{item:<{width}}{pad}'
 
-        rows = list(strict_zip(*columns))  # Transpose
-
         # For brevity's sake, we've given our line characters short names.  Respectively, they stand for:
         # outer-vertical, outer-horizontal, inner-vertical, inner-horizontal, top-left, top-middle, top-right
         # middle-left, 'x' for 'cross', middle-right, bottom-left, bottom-middle, bottom-right, top-middle-inner
         ov, oh, iv, ih, tl, tm, tr, ml, x, mr, bl, bm, br, tmi = Table.STYLES[self.style]
 
-        joined_rows = [f'{ov}{f"{iv}".join(row)}{ov}' for row in rows]
+        outer_horiz = tuple(oh * len(column[0]) for column in columns)
+        inner_horiz = tuple(ih * len(column[0]) for column in columns)
 
-        outer_horiz = tuple(oh * len(item) for item in rows[0])
-        inner_horiz = tuple(ih * len(item) for item in rows[0])
+        rows = [f'{ov}{f"{iv}".join(row)}{ov}' for row in strict_zip(*columns)]
 
         if self.labels:
             label_border_bottom = f'{ml}{x.join(inner_horiz)}{mr}'
-            joined_rows.insert(1, label_border_bottom)
+            rows.insert(1, label_border_bottom)
 
         if self.title:
-            max_title_width = len(joined_rows[0]) - 2 * self.padding - 2
+            max_title_width = len(rows[0]) - 2 * self.padding - 2
             if len(self.title) > max_title_width:
                 title = f'{ov}{pad}{self.title[:max_title_width - 3]}...{pad}{ov}'
             else:
@@ -128,15 +126,15 @@ class Table:
 
             title_border_top = f'{tl}{oh * (max_title_width + 2 * padding)}{tr}'
             title_border_bottom = f'{ml}{tmi.join(inner_horiz)}{mr}'
-            joined_rows = [title_border_top, title, title_border_bottom] + joined_rows
+            rows = [title_border_top, title, title_border_bottom] + rows
         else:
             top_border =  f'{tl}{tm.join(outer_horiz)}{tr}'
-            joined_rows.insert(0, top_border)
+            rows.insert(0, top_border)
 
         bottom_border = f'{bl}{bm.join(outer_horiz)}{br}'
-        joined_rows.append(bottom_border)
+        rows.append(bottom_border)
 
-        self._as_string = '\n'.join(joined_rows)
+        self._as_string = '\n'.join(rows)
 
     @property
     def labels(self):
