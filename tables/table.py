@@ -119,12 +119,18 @@ class Table:
             label_border = f'{ml}{x.join(inner_horiz)}{mr}'
             joined_rows.insert(2, label_border)
 
-        if self.title:
-            title_width = len(joined_rows[0])
-            joined_rows.insert(0, self.title.center(title_width))
-
         bottom_border = f'{bl}{bm.join(outer_horiz)}{br}'
         joined_rows.append(bottom_border)
+
+        if self.title:
+            title = f'{pad}{self.title}{pad}'
+            if len(title) > len(joined_rows[0]):
+                for i, row in enumerate(joined_rows):
+                    joined_rows[i] = row.center(len(title))
+            else:
+                title = title.center(len(joined_rows[0]))
+
+            joined_rows.insert(0, title)
 
         self._as_string = "\n".join(joined_rows)
 
