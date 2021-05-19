@@ -109,7 +109,6 @@ class Table:
         # middle-left, 'x' for 'cross', middle-right, bottom-left, bottom-middle, bottom-right, top-middle-inner
         ov, oh, iv, ih, tl, tm, tr, ml, x, mr, bl, bm, br, tmi = Table.STYLES[self.style]
 
-
         joined_rows = [f'{ov}{f"{iv}".join(row)}{ov}' for row in rows]
 
         outer_horiz = tuple(oh * len(item) for item in rows[0])
