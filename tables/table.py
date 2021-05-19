@@ -58,6 +58,10 @@ class Table:
         'min_width',
     )
 
+    # Characters in STYLES come in the following order:
+    #    vertical (outer), horizontal (outer), vertical (inner), horizontal (inner),
+    #    top-left, top-middle, top-right, middle-left, middle-middle (4-way), middle-right,
+    #    bottom-left, bottom-middle, bottom-right, top-middle (inner)
     STYLES = {
         "light"            : '│─│─┌┬┐├┼┤└┴┘┬',
         "heavy"            : '┃━┃━┏┳┓┣╋┫┗┻┛┳',
