@@ -1,6 +1,20 @@
+from functools import wraps
 from warnings import warn
 
-from .utils import strict_zip, stringify, needs_rebuild
+from .strict_zip import strict_zip
+
+def stringify(iterable):
+    return [str(item).strip() for item in iterable]
+
+def needs_rebuild(method):
+    """Indicate a method will mutate the table.
+    """
+    @wraps(method)
+    def wrapped(self, *args, **kwargs):
+        self._needs_rebuild = True
+        method(self, *args, **kwargs)
+
+    return wrapped
 
 
 class Table:
