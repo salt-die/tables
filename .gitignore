@@ -2,6 +2,7 @@ TODO
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
+_table_2/
 *.py[cod]
 *$py.class
 
