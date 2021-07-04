@@ -3,8 +3,10 @@
 Pretty print tabular data:
 ```py
 >>> t = Table(
-...     ['John Smith', '356 Grove Rd', '123-4567'],
-...     ['Mary Sue', '311 Penny Lane', '555-2451'],
+...     [
+...         ['John Smith', '356 Grove Rd', '123-4567'],
+...         ['Mary Sue', '311 Penny Lane', '555-2451'],
+...     ],
 ...     labels=['Name', 'Address', 'Phone Number'],
 ... )
 
@@ -18,9 +20,11 @@ Pretty print tabular data:
 ```
 ```py
 >>> t = Table(
-...     ['spotted','dog','pants','heavily'],
-...     ['black','cat','meows','loudly'],
-...     ['tall','man','runs','quickly'],
+...     [
+...         ['spotted','dog','pants','heavily'],
+...         ['black','cat','meows','loudly'],
+...         ['tall','man','runs','quickly'],
+...     ],
 ...     labels=['adjective','noun','verb','adverb'],
 ...     centered=True,
 ...     style='double',
