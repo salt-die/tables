@@ -45,8 +45,10 @@ class Table:
     -------
     ```
     >>> t = Table(
-    ...     ['John Smith', '356 Grove Rd', '123-4567'],
-    ...     ['Mary Sue', '311 Penny Lane', '555-2451'],
+    ...     [
+    ...         ['John Smith', '356 Grove Rd', '123-4567'],
+    ...         ['Mary Sue', '311 Penny Lane', '555-2451'],
+    ...     ],
     ...     labels=['Name', 'Address', 'Phone Number'],
     ... )
     ...
@@ -89,7 +91,7 @@ class Table:
         'whitespace'       : '              ',
     }
 
-    def __init__(self, *rows, labels=None, centered=False, padding=1, style="light", title=None, min_width=0):
+    def __init__(self, rows, labels=None, centered=False, padding=1, style="light", title=None, min_width=0):
         self.columns = [stringify(column) for column in strict_zip(*rows)]
 
         self.labels = labels
