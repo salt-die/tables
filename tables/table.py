@@ -1,7 +1,6 @@
+import builtins
 from functools import wraps
 from warnings import warn
-
-from .strict_zip import strict_zip
 
 def stringify(iterable):
     return [str(item).strip() for item in iterable]
@@ -92,7 +91,7 @@ class Table:
     }
 
     def __init__(self, rows, labels=None, centered=False, padding=1, style="light", title=None, min_width=0):
-        self.columns = [stringify(column) for column in strict_zip(*rows)]
+        self.columns = [stringify(column) for column in zip(*rows, strict=True)]
 
         self.labels = labels
         self.centered = centered
@@ -109,7 +108,7 @@ class Table:
             return
 
         if self.labels:
-            columns = [[label] + column for label, column in strict_zip(self.labels, self.columns)]
+            columns = [[label] + column for label, column in zip(self.labels, self.columns, strict=True)]
         else:
             columns = [column.copy() for column in self.columns]
 
@@ -131,7 +130,7 @@ class Table:
         outer_horiz = tuple(oh * len(column[0]) for column in columns)
         inner_horiz = tuple(ih * len(column[0]) for column in columns)
 
-        rows = [f'{ov}{f"{iv}".join(row)}{ov}' for row in strict_zip(*columns)]
+        rows = [f'{ov}{f"{iv}".join(row)}{ov}' for row in zip(*columns, strict=True)]
 
         if self.labels:
             label_border_bottom = f'{ml}{x.join(inner_horiz)}{mr}'
@@ -255,9 +254,11 @@ class Table:
             column.pop(index)
 
     def copy(self):
-        table = type(self)()
+        table = type(self)([])
         for attr in type(self).__slots__:
-            if attr != '_as_string':  # A newly created table might not have this attribute.
+            if attr == 'columns':
+                setattr(table, 'columns', [column.copy() for column in self.columns])
+            elif attr != '_as_string':
                 setattr(table, attr, getattr(self, attr))
         return table
 
@@ -276,11 +277,11 @@ class Table:
 
     @needs_rebuild
     def __setitem__(self, key, item):
-        if not isinstance(key, tuple) and len(key) != 2 and not isinstance(key[0], int) and not isinstance(key[1], int):
-            raise ValueError('invalid key')
-
-        row, col = key
-        self.columns[col][row] = str(item).strip()
+        match key:
+            case tuple((int() as row, int() as col)):
+                self.columns[col][row] = str(item).strip()
+            case _:
+                raise ValueError('invalid key')
 
     def __getitem__(self, key):
         """
@@ -298,56 +299,50 @@ class Table:
                `labels: list[str]`       │  Table with columns with labels from `labels`
                                          ╵
         """
-        if isinstance(key, list):
-            if isinstance(key[0], int):
-                key = key, ...
-            elif isinstance(key[0], str):
-                if not self.labels:
-                    raise ValueError('table has no labels')
-                key = ..., [self.labels.index(label) for label in key]
+        match key:
+            case list((int(), *_)):
+                rows, cols = key, ...
+            case list((str(), *_)) if self.labels:
+                rows, cols = ..., [self.labels.index(label) for label in key]
+            case str() if self.labels:
+                rows, cols = ..., self.labels.index(key)
+            case int():
+                rows, cols = key, ...
+            case tuple((rows, cols)):
+                pass
+            case _:
+                raise ValueError('invalid key')
 
-        elif isinstance(key, str):
-            if not self.labels:
-                raise ValueError('table has no labels')
-            key = ..., self.labels.index(key)
-
-        elif isinstance(key, int):
-            key = key, ...
-
-        if not isinstance(key, tuple) and len(key) != 2:
-            raise ValueError('invalid key')
-
-        rows, cols = key
-        if rows is ...:
-            if isinstance(cols, int):
+        match (rows, cols):
+            case (builtins.Ellipsis, int()):
                 return self.columns[cols]  # Return column
-            elif isinstance(cols, list):   # Return Table with selected columns
+            case (builtins.Ellipsis, list()):
                 table = self.copy()
                 table.columns = [self.columns[i] for i in cols]
+
                 if self.labels:
                     table.labels = [self.labels[i] for i in cols]
+
                 return table
-
-        elif isinstance(rows, int):
-            if cols is ...:
+            case (int(), builtins.Ellipsis):
                 return [column[rows] for column in self.columns]  # Return row
-            elif isinstance(cols, int):
+            case (int(), int()):
                 return self.columns[cols][rows]
-
-        elif isinstance(rows, list):
-            if cols is ...:
+            case (list(), builtins.Ellipsis):
                 table = self.copy()
                 table.columns = [[column[row] for row in rows] for column in self.columns]
                 return table
-            elif isinstance(cols, list):
+            case (list(), list()):
                 table = self.copy()
                 columns = [self.columns[i] for i in cols]
                 table.columns = [[column[row] for row in rows] for column in columns]
+
                 if self.labels:
                     table.labels = [self.labels[i] for i in cols]
-                return table
 
-        raise KeyError(key)
+                return table
+            case _:
+                raise ValueError('invalid key')
 
     def __str__(self):
         if self._needs_rebuild:
