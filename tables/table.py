@@ -92,13 +92,12 @@ class Table:
 
     def __init__(self, rows, labels=None, centered=False, padding=1, style="light", title=None, min_width=0):
         self.columns = [stringify(column) for column in zip(*rows, strict=True)]
-
         self.labels = labels
         self.centered = centered
         self.padding = padding
         self.style = style
         self.title = title
-        self.min_width = 0
+        self.min_width = min_width
 
     def _build_table(self):
         """Creates a representation of this table as a string.
